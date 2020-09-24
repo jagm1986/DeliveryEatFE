@@ -5,6 +5,11 @@ app.controller('inicioCtrl', function ($scope) {
     toastr.success('Pedido Realizado!', 'Exito');
 
     $scope.Titulo = 'Pedido Exitoso';
+
+    $scope.Volver = function () {
+        window.location.href = '/app/Pedido.html';
+
+    };
 });
 
 
