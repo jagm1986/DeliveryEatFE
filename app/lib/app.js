@@ -89,7 +89,6 @@ app.controller('ArticulosCtrl', ['$rootScope', '$scope', '$location', '$locale',
 
 
         $scope.AgregarDomicilioUI = function (Dom) {
-            $scope.AccionABMC = 'L';
 
             if (!Dom.Calle) {
                 toastr.warning('Falta agregar la calle', 'Cuidado');
@@ -103,6 +102,8 @@ app.controller('ArticulosCtrl', ['$rootScope', '$scope', '$location', '$locale',
                 toastr.warning('Falta agregar la ciudad', 'Cuidado');
                 return;
             }
+
+            $scope.AccionABMC = 'L';
             $scope.DtoFiltro.direccion = Dom.Calle + ' - ' + Dom.Nro + ' - ' + Dom.Ciudad + ' - ' + Dom.Referencia
 
         };
