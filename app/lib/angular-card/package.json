@@ -1,0 +1,65 @@
+{
+  "_from": "angular-card",
+  "_id": "angular-card@0.3.13",
+  "_inBundle": false,
+  "_integrity": "sha512-MVwO1Wck+/EJj/AoQoaLixq5dRN6fq4WduBUEdFGdTa4I4ZODYdVMwE+ONOrAh3RiWXiDC4d5VDyN6CfRxExFA==",
+  "_location": "/angular-card",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "angular-card",
+    "name": "angular-card",
+    "escapedName": "angular-card",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-card/-/angular-card-0.3.13.tgz",
+  "_shasum": "95fd269cb42e9c8856846e8cc76376e2f13e8543",
+  "_spec": "angular-card",
+  "_where": "C:\\Users\\Agudin\\DeliveryEatFE",
+  "author": {
+    "name": "Sergey Gavruk",
+    "email": "svgavruk@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/gavruk/angular-card/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "card": "^2.4.0"
+  },
+  "deprecated": false,
+  "description": "Angular directive for card https://github.com/jessepollak/card",
+  "devDependencies": {
+    "angular": "^1.4.8"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "homepage": "https://github.com/gavruk/angular-card#readme",
+  "keywords": [
+    "angular",
+    "credit",
+    "card"
+  ],
+  "license": "MIT",
+  "main": "src/card.js",
+  "name": "angular-card",
+  "peerDependencies": {
+    "angular": "^1.4.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gavruk@github.com/gavruk/angular-card.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.3.13"
+}
