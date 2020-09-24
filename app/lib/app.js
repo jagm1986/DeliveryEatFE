@@ -41,7 +41,7 @@ app.controller('ArticulosCtrl', ['$rootScope', '$scope', '$location', '$locale',
         $scope.fecha = {};
         $scope.total = 0;
         $scope.DtoFiltro.Activo = null;
-        $scope.DtoFiltro.monto = '$';
+        $scope.DtoFiltro.monto = 0;
         $scope.PaginaActual = 1;
         $scope.OpcionesSiNo = [{ Id: null, Nombre: '' }, { Id: true, Nombre: 'SI' }, { Id: false, Nombre: 'NO' }];
 
@@ -172,10 +172,10 @@ app.controller('ArticulosCtrl', ['$rootScope', '$scope', '$location', '$locale',
             if (formaPago === '1'){
                  if(Lista.monto === '$' || Lista.monto === undefined) {
                 pedidoExito = false;
-                toastr.warning('Falta agregar el monto', 'Cuidado');
+                toastr.warning('El monto es incorrecto', 'Cuidado');
                 return;
                } else {
-                   if((parseInt(Lista.monto.substring(1)) - $scope.total) < 0) {
+                   if((parseInt(Lista.monto) - $scope.total) < 0) {
                       pedidoExito = false;
                       toastr.warning('El monto ingresado a pagar es menor al total, faltan : $' 
                       +(parseInt(Lista.monto.substring(1)) - $scope.total), 'Cuidado');
