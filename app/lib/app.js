@@ -164,13 +164,24 @@ app.controller('ArticulosCtrl', ['$rootScope', '$scope', '$location', '$locale',
                 toastr.warning('Falta agregar la forma de pago', 'Cuidado');
                 return;
             }
-            if (formaPago === '1' && (Lista.monto === '$' || Lista.monto === undefined)) {
+            if (formaPago === '1'){
+                 if(Lista.monto === '$' || Lista.monto === undefined) {
                 pedidoExito = false;
                 toastr.warning('Falta agregar el monto', 'Cuidado');
                 return;
+               } else {
+                   if((parseInt(Lista.monto.substring(1)) - $scope.total) < 0) {
+                      pedidoExito = false;
+                      toastr.warning('El monto ingresado a pagar es menor al total, faltan : $' 
+                      +(parseInt(Lista.monto.substring(1)) - $scope.total), 'Cuidado');
+                    return;
+                   } else {
+
+                   }
+               }
             }
             if (pedidoExito === true) {
-                window.location.href = '/index.html';
+                window.location.href = '/app/index.html';
 
             }
 
