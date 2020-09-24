@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DeliveryEat</title>
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <link href="lib/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/site.css" rel="stylesheet" type="text/css" />
+
+    <script src="lib/jquery-3.3.1.js"></script>
+    <script src="lib/popper.min.js"></script>
+    <script src="lib/bootstrap.js" type="text/javascript"></script>
+
+    <script src="lib/angular.js" type="text/javascript"></script>
+    <script src="lib/app.js"></script>
+    <script src="https://rawgithub.com/CodeSeven/toastr/master/toastr.js"></script>
+    <script src="\lib\angular-route\angular-route.min.js"></script>
+
+</head>
+
+<body ng-app="myApp" ng-controller="ArticulosCtrl">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <nav class="navbar navbar-light bg-ligth">
+        </nav>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/index.html">Inicio <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Pedido.html" title="Gestionar Pedido">Pedido</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Tarjetas.html" title="Tarjetas">Tarjetas</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Acerca de</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contacto</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="">Bienvenido: xxx</a></li>
+                <li class="nav-item"><a class="nav-link" href="">Cerrar Session</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div>
+        <button type="button" ng-click="Agregar()" class="btn text-right float-right">
+            <span class="fa fa-shopping-cart shopping-cart-summary-fa"></span>({{Lista.length}})</button>
+    </div>
+
+    <div>
+        <h3 novalidate ng-show="AccionABMC == 'L'"> &nbsp; Tu Pedido<small></small></h3>
+    </div>
+
+    <form name="FormFiltro" class="bg-light" novalidate ng-show="AccionABMC == 'L'">
+        <div class="form-group row col-sm-3">
+            <label class="font-weight-bolder col-form-label col-sm-2 col-sm-offset-1">
+                Direccion de Entrega:
+            </label>
+            <div class="row">
+
+                <div class="col py-3 px-sm-12" style="width: 350px;padding:35px">
+                    <input type="text" name="direccion" class="form-control" disabled ng-model="DtoFiltro.direccion" />
+                </div>
+                <div class="col-xs-3"></div>
+                <button class="btn btn-primary" ng-click="AgregarDomicilio()">
+                    <span class="fa fa-plus"> </span> Agregar
+                </button>
+            </div>
+        </div>
+
+        <label class="col py-3 px-sm-12 font-weight-bolder col-form-label col-sm-2  text-left">
+            Forma Entrega:
+        </label>
+        <div class="col-sm-3">
+            <input type="radio" id="formaEntregaAntes" name="gender" value="antes"
+                ng-model="DtoFiltro.formaEntregaAntes" ng-click="SetFalseElegirFecha()">
+            <label for="antes">Lo antes posible</label><br>
+
+            <input type="radio" id="formaEntregaFecha" name="gender" value="fecha"
+                ng-model="DtoFiltro.formaEntregaFecha">
+            <label for="fecha">Elegir Fecha</label><br>
+            <div class="col-sm-3">
+                <input class="form-control" type="date" id="exampleInput" name="input" ng-model="DtoFiltro.fecha"
+                    placeholder="yyyy-MM-dd" min="2020-07-04" max="2020-12-31" required
+                    ng-show="!!DtoFiltro.formaEntregaFecha" />
+            </div>
+        </div>
+        <label class="col py-3 px-sm-12 font-weight-bolder col-form-label col-sm-2  text-left">
+            Forma Pago:
+        </label>
+        <div class="col-sm-3">
+            <select class="form-control" ng-model="formaPago" ng-change="AgregarTarjetaForm(formaPago)">
+                <option value=''>Cambiar</option>
+                <option value="2">Tarjeta Crédito</option>
+                <option value="1">Efectivo</option>
+            </select>
+        </div>
+        <div ng-If="formaPago === '1'">
+            <label class="col py-3 px-sm-12 font-weight-bolder  col-form-label col-sm-2  text-left">
+                Monto a Pagar:
+            </label>
+            <div class="col-sm-3">
+                <input type="text" name="currency-field" id="currency-field" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+                    value="" data-type="currency" placeholder="$1,000,000.00" class="form-control"
+                    ng-model="DtoFiltro.monto" />
+            </div>
+        </div>
+        </div>
+        <div class="row justify-content-center">
+            <button class="btn btn-primary" ng-click="HacerPedido(DtoFiltro, Lista, formaPago);">
+                <span class="fa fa-check"> </span> Hacer pedido
+            </button>
+        </div>
+    </form>
+
+    <div ng-show="AccionABMC == 'DP' ||AccionABMC == 'L'  ">
+        <h6> &nbsp; Detalle de tu Pedido</h6>
+
+        <table class="table">
+            <tr>
+                <th class="text-center">Comercio</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Precio</th>
+
+            </tr>
+            <tr ng-repeat="dto in Lista">
+                <td class="text-center">{{dto.comercio}}</td>
+                <td class="text-center">{{dto.nombre}}</td>
+                <td class="text-center">{{dto.cantidad}}</td>
+                <td class="text-center">${{dto.precio}}</td>
+                <td class="text-center text-nowrap" ng-show="AccionABMC != 'L'">
+                    <button class="btn btn-danger btn-sm" title="Eliminar" ng-click="EliminarPedido($index)">
+                        <span class="fa fa-remove"></span>
+                    </button>
+
+                </td>
+            </tr>
+        </table>
+        <h6> &nbsp; Total: ${{total}}</h6>
+        <div class="col-sm-12">
+            <div class="row bg-light">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center" ng-show="AccionABMC == 'DP' ||AccionABMC == 'L'  ">
+
+        &nbsp;
+        <button class="btn btn-warning" ng-click="Volver()">
+            <span class="fa fa-arrow-left"></span> {{AccionABMC == 'A'  || AccionABMC == 'M' ? 'Volver' : 'Volver'}}
+        </button>
+    </div>
+    </form>
+
+    <form name="FormFiltro" class="bg-light" novalidate ng-show="AccionABMC == 'D'">
+        <h3 class="col-sm-3">Agregar Domicilio<small></small></h3>
+
+        <div class="form-group row">
+            <label class="col-form-label col-sm-2 col-sm-offset-1">
+                Calle:
+            </label>
+            <div class="col-sm-3">
+                <input type="text" name="Calle" class="form-control" ng-model="Dom.Calle" value="xxxx xxxx xxxx xxxx" />
+            </div>
+            <label class="col-form-label col-sm-2 col-sm-offset-1">
+                Nro:
+            </label>
+            <div class="col-sm-3">
+                <input type="text" name="Nro" class="form-control" ng-model="Dom.Nro" value="xxxx xxxx xxxx xxxx" />
+            </div>
+            <label class="col-form-label col-sm-2  text-left">
+                Ciudad:
+            </label>
+            <div class="col-sm-3">
+                <select class="form-control" ng-model="Dom.Ciudad">
+                    <option value=''></option>
+                    <option value=Almafuerte>Almafuerte</option>
+                    <option value=Amboy>Amboy</option>
+                    <option value=AthosPampa>Athos Pampa</option>
+                    <option value=BellVille>Bell Ville</option>
+                    <option value=Brinkmann>Brinkmann</option>
+                    <option value=Cordoba>Ciudad de Córdoba</option>
+                    <option value=CruzAlta>Cruz Alta</option>
+                    <option value=DeanFunes>Dean Funes</option>
+                    <option value=FaldadelCarmen>Falda del Carmen</option>
+                    <option value=LaBolsa>La Bolsa</option>
+                    <option value=LosGigantes>Los Gigantes</option>
+                    <option value=Oliva>Oliva</option>
+                    <option value=RioTercero>Rio Tercero</option>
+                    <option value=VilladelDique>Villa del Dique</option>
+                    <option value=VillaMaria>Villa Maria</option>
+                </select>
+            </div>
+            <label class="col-form-label col-sm-2 col-sm-offset-1">
+                Referencia:
+            </label>
+            <div class="col-sm-3">
+                <input type="text" name="Referencia" class="form-control" ng-model="Dom.Referencia"
+                    value="xxxx xxxx xxxx xxxx" />
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <button class="btn btn-warning" ng-click="Volver()">
+                <span class="fa fa-arrow-left"></span> {{AccionABMC == 'A'  || AccionABMC == 'M' ? 'Volver' : 'Volver'}}
+            </button>
+            <button class="btn btn-primary" ng-click="AgregarDomicilioUI(Dom)">
+                <span class="fa fa-plus"> </span> Agregar
+            </button>
+        </div>
+    </form>
+
+    <div class="container">
+
+    </div>
+
+    <div novalidate ng-show="AccionABMC == 'T'">
+        <h3 class="col-sm-3">Agregar Tarjeta<small></small></h3>
+
+        <form novalidate name="paymentForm" class="bg-light" novalidate ng-show="AccionABMC == 'T'">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 col-sm-offset-1">
+                    Numero de tarjeta:
+                </label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" name="creditCard" ng-model="ccinfo.number" required
+                        data-credit-card-type data-ng-pattern="/^[0-9]+$/" data-ng-minlength="15" maxlength="19"
+                        placeholder="XXXX-XXXX-XXXX-XXXX">{{ccinfo.type | uppercase}}
+                    <img ng-src=lib/{{ccinfo.type}}.png>
+
+                    <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+                        <li ng-show="paymentForm.creditCard.$error.minlength">La tarjeta de credito debe tener entre
+                            15-19 digit0s</li>
+                        <li ng-show="paymentForm.creditCard.$error.pattern">La tarjeta de credito debe contener solo
+                            numeros</li>
+                        <li ng-show="paymentForm.creditCard.$error.invalid">Las tarjetas de credito validas solo Visa
+                        </li>
+                        <li ng-show="paymentForm.creditCard.$error.required">La tarjeta de credito es requerida</li>
+                    </ul>
+
+                </div>
+
+                <label class="col-form-label col-sm-2 col-sm-offset-1">
+                    Nombre:
+                </label>
+                <div class="col-sm-3">
+                    <input type="text" name="Nombre" class="form-control" ng-model="DtoFiltro.Nombre" placeholder="Juan"
+                        value="" />
+                </div>
+                <label class="col-form-label col-sm-2 col-sm-offset-1">
+                    Apellido:
+                </label>
+                <div class="col-sm-3">
+                    <input type="text" name="Apellido" class="form-control" ng-model="DtoFiltro.Apellido"
+                        placeholder="Martinez" value="" />
+                </div>
+
+
+                <label class="col-form-label col-sm-2 col-sm-offset-1">
+                    CVC:
+                </label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="securityCode" ng-model="ccinfo.securityCode"
+                        placeholder="XXX" required data-ng-pattern="/^[0-9]+$/" data-ng-minlength="3" maxlength="4">
+                    <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+                        <li ng-show="paymentForm.securityCode.$error.pattern">El codigo de seguridad debe ser solo
+                            numeros</li>
+                        <li ng-show="paymentForm.securityCode.$error.minlength">El codigo de seguridad debe contener 3-4
+                            digit0s</li>
+                        <li ng-show="paymentForm.securityCode.$error.required">El codigo de seguridad es requerido</li>
+                    </ul>
+                </div>
+
+                <label class="col-form-label col-sm-2 col-sm-offset-1">
+                    Fecha Vencimiento:
+                </label>
+                <div class="col-sm-3">
+
+                    <select class="form-control" ng-model="ccinfo.month" name="month" data-card-expiration required>
+                        <option disabled selected value="">Mes</option>
+                        <option ng-repeat="month in months" value="{{$index+1}}"> {{$index+1}}</li>
+                    </select>
+                    <br />
+                    <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+                        <li ng-show="paymentForm.month.$error.required">Mes de expiración es requerido</li>
+                    </ul>
+                    <select class="form-control" ng-model="ccinfo.year" name="year" required>
+                        <option disabled selected value="">Año</option>
+                        <option ng-repeat="year in [] | range:currentYear:currentYear+13">{{year}}</li>
+                    </select>
+                </div>
+
+                <br />
+                <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+                    <li ng-show="paymentForm.year.$error.required">Año de expiración es requerido</li>
+                    <li ng-show="paymentForm.month.$error.invalid">La fecha es invalida</li>
+                </ul>
+            </div>
+
+            <div class="row justify-content-center">
+                <button class="btn btn-warning" ng-click="Volver()">
+                    <span class="fa fa-arrow-left"></span>
+                    {{AccionABMC == 'A'  || AccionABMC == 'M' ? 'Volver' : 'Volver'}}
+                </button>
+                <button class="btn btn-primary"
+                    ng-click="paymentForm.submitAttempt=true;AgregarTarjeta(ccinfo, paymentForm, FormFiltro);">
+                    <span class="fa fa-plus"> </span> Agregar
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DeliveryEat!</title>
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <link href="lib/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/site.css" rel="stylesheet" type="text/css" />
+
+    <script src="lib/jquery-3.3.1.js"></script>
+    <script src="lib/popper.min.js"></script>
+    <script src="lib/bootstrap.js" type="text/javascript"></script>
+
+    <script src="lib/angular.js" type="text/javascript"></script>
+    <script src="lib/app.js"></script>
+    <script src="\lib\angular-route\angular-route.min.js"></script>
+    <script src="https://rawgithub.com/CodeSeven/toastr/master/toastr.js"></script>
+
+
+</head>
+
+<body ng-app="myApp" ng-controller="ArticulosCtrl">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+    <nav class="navbar navbar-light bg-ligth">
+    </nav>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/index.html">Inicio <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Pedido.html" title="Gestionar Pedido">Pedido</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/Tarjeta.html" title="Tarjeta">Tarjeta</a>
+              </li>
+           
+            <li class="nav-item">
+                <a class="nav-link" href="#">Acerca de</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contacto</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="">Bienvenido: xxx</a></li>
+            <li class="nav-item"><a class="nav-link" href="">Cerrar Session</a></li>
+        </ul>
+    </div>
+</nav>
+
+<h3 class="col-sm-3">Agregar Tarjeta<small></small></h3>
+
+
+<form novalidate name="paymentForm" class="bg-light" novalidate ng-show="AccionABMC == 'L'">
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 col-sm-offset-1">
+            Numero de tarjeta:
+        </label>
+        <div class="col-sm-3">
+          <input
+          class="form-control"
+          type="text"
+          name="creditCard"
+          ng-model="ccinfo.number"
+          required
+          data-credit-card-type
+          data-ng-pattern="/^[0-9]+$/"
+          data-ng-minlength="15"
+          maxlength="19"
+          placeholder="XXXX-XXXX-XXXX-XXXX" >{{ccinfo.type | uppercase}} 
+          <img ng-src=lib/{{ccinfo.type}}.png>
+
+        <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+          <li ng-show="paymentForm.creditCard.$error.minlength">La tarjeta de credito debe tener entre 15-19 digit0s</li>
+          <li ng-show="paymentForm.creditCard.$error.pattern">La tarjeta de credito debe contener solo numeros</li>
+          <li ng-show="paymentForm.creditCard.$error.invalid">Las tarjetas de credito validas solo Amex, Visa, Discover, or Master Card</li>
+          <li ng-show="paymentForm.creditCard.$error.required">La tarjeta de credito es requerida</li>
+        </ul>
+
+        </div>
+
+        <label class="col-form-label col-sm-2 col-sm-offset-1">
+            Nombre:
+        </label>
+        <div class="col-sm-3">
+            <input type="text" name="Nombre"
+                   class="form-control"
+                   ng-model="DtoFiltro.Nombre"
+                   placeholder="Juan"
+                   value="" />
+        </div>
+        <label class="col-form-label col-sm-2 col-sm-offset-1">
+            Apellido:
+        </label>
+        <div class="col-sm-3">
+            <input type="text" name="Apellido"
+                   class="form-control"
+                   ng-model="DtoFiltro.Apellido"
+                   placeholder="Martinez"
+                   value="" />
+        </div>
+
+
+        <label class="col-form-label col-sm-2 col-sm-offset-1">
+            CCV:
+        </label>
+        <div class="col-sm-3">
+        <input
+          type="text"
+          class="form-control"
+          name="securityCode"
+          ng-model="ccinfo.securityCode"
+          placeholder="XXX"
+          required
+          data-ng-pattern="/^[0-9]+$/"
+          data-ng-minlength="3"
+          maxlength="4">
+        <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+          <li ng-show="paymentForm.securityCode.$error.pattern">El codigo de seguridad debe ser solo numeros</li>
+          <li ng-show="paymentForm.securityCode.$error.minlength">El codigo de seguridad debe contener  3-4 digit0s</li>
+          <li ng-show="paymentForm.securityCode.$error.required">El codigo de seguridad es requerido</li>
+        </ul>
+        </div>
+
+        <label class="col-form-label col-sm-2 col-sm-offset-1">
+            Fecha Vencimiento:
+        </label>
+        <div class="col-sm-3">
+
+        <select class="form-control" ng-model="ccinfo.month" name="month" data-card-expiration required>
+          <option disabled selected value="">Mes</option>
+          <option ng-repeat="month in months" value="{{$index+1}}" > {{$index+1}} - {{month}}</li>
+        </select>
+        <br/>
+        <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+          <li ng-show="paymentForm.month.$error.required">Mes de expiración es requerido</li>
+        </ul>
+        <select class="form-control" ng-model="ccinfo.year" name="year" required>
+          <option disabled selected value="">Año</option>
+          <option ng-repeat="year in [] | range:currentYear:currentYear+13">{{year}}</li>
+        </select>
+        </div>
+
+        <br/>
+        <ul ng-show="paymentForm.submitAttempt && !paymentForm.$valid">
+          <li ng-show="paymentForm.year.$error.required">Año de expiración es requerido</li>
+          <li ng-show="paymentForm.month.$error.invalid">La fecha es invalida</li>
+        </ul>
+    </div>
+       
+
+        <div class="row justify-content-center">
+            <button class="btn btn-danger" onclick="window.location.href='/Pedido.html';">
+                <span class="fa fa-remove"> </span> Cancelar
+            </button>
+            <button class="btn btn-primary" ng-click="paymentForm.submitAttempt=true;AgregarTarjeta(ccinfo, paymentForm, FormFiltro);">
+                <span class="fa fa-plus"> </span> Agregar
+            </button>
+        </div>
+
+</form>
+
+
+<div class="alert alert-info" ng-show="AccionABMC == 'L' && Lista && Lista.length== 0">
+    <span class="fa fa-exclamation-sign"></span>{{Mensajes['SD']}}
+</div>
+
+<form name="FormReg" class="bg-light" novalidate ng-show="AccionABMC != 'L'">
+
+
+</form>
+
+<div class="container">
+
+</div>
+
+</body>
+</html>
